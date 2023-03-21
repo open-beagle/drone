@@ -56,7 +56,7 @@ steps:
       base: registry.cn-qingdao.aliyuncs.com/wod/alpine:3-amd64
       dockerfile: .beagle/dockerfile
       repo: wod/drone
-      version: v2.11.1
+      version: v2.12.1
       channel: amd64
       args: 'TARGETOS=linux,TARGETARCH=amd64'
       registry: registry.cn-qingdao.aliyuncs.com
@@ -74,7 +74,7 @@ steps:
       base: registry.cn-qingdao.aliyuncs.com/wod/alpine:3-arm64
       dockerfile: .beagle/dockerfile
       repo: wod/drone
-      version: v2.11.1
+      version: v2.12.1
       channel: arm64
       args: 'TARGETOS=linux,TARGETARCH=arm64'
       registry: registry.cn-qingdao.aliyuncs.com
@@ -92,7 +92,7 @@ steps:
       base: registry.cn-qingdao.aliyuncs.com/wod/alpine:3-ppc64le
       dockerfile: .beagle/dockerfile
       repo: wod/drone
-      version: v2.11.1
+      version: v2.12.1
       channel: ppc64le
       args: 'TARGETOS=linux,TARGETARCH=ppc64le'
       registry: registry.cn-qingdao.aliyuncs.com
@@ -110,7 +110,7 @@ steps:
       base: registry.cn-qingdao.aliyuncs.com/wod/alpine:3-mips64le
       dockerfile: .beagle/dockerfile
       repo: wod/drone
-      version: v2.11.1
+      version: v2.12.1
       channel: mips64le
       args: 'TARGETOS=linux,TARGETARCH=mips64le'
       registry: registry.cn-qingdao.aliyuncs.com
@@ -121,13 +121,10 @@ steps:
 
   - name: docker-arch
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-manifest:1.0
-    volumes:
-      - name: docker
-        path: /var/run/docker.sock
     settings:
       platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/mips64le
-      template: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11.1-ARCH
-      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11.1
+      template: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12.1-ARCH
+      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12.1
       username:
         from_secret: REGISTRY_USER_ALIYUN
       password:
@@ -152,12 +149,9 @@ clone:
 steps:
   - name: harbor-amd64
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-tag:1.0
-    volumes:
-      - name: docker
-        path: /var/run/docker.sock
     settings:
-      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11.1-amd64
-      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11-amd64
+      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12.1-amd64
+      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12-amd64
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
         from_secret: REGISTRY_USER_ALIYUN
@@ -166,12 +160,9 @@ steps:
 
   - name: harbor-arm64
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-tag:1.0
-    volumes:
-      - name: docker
-        path: /var/run/docker.sock
     settings:
-      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11.1-arm64
-      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11-arm64
+      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12.1-arm64
+      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12-arm64
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
         from_secret: REGISTRY_USER_ALIYUN
@@ -180,12 +171,9 @@ steps:
 
   - name: harbor-ppc64le
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-tag:1.0
-    volumes:
-      - name: docker
-        path: /var/run/docker.sock
     settings:
-      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11.1-ppc64le
-      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11-ppc64le
+      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12.1-ppc64le
+      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12-ppc64le
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
         from_secret: REGISTRY_USER_ALIYUN
@@ -194,12 +182,9 @@ steps:
 
   - name: harbor-mips64le
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-tag:1.0
-    volumes:
-      - name: docker
-        path: /var/run/docker.sock
     settings:
-      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11.1-mips64le
-      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11-mips64le
+      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12.1-mips64le
+      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12-mips64le
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
         from_secret: REGISTRY_USER_ALIYUN
@@ -208,13 +193,10 @@ steps:
 
   - name: harbor-arch
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-manifest:1.0
-    volumes:
-      - name: docker
-        path: /var/run/docker.sock
     settings:
       platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/mips64le
-      template: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11-ARCH
-      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.11
+      template: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12-ARCH
+      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.12
       username:
         from_secret: REGISTRY_USER_ALIYUN
       password:
