@@ -1,0 +1,25 @@
+From 611de458ef50d8fba97a053e987a120246d0d611 Mon Sep 17 00:00:00 2001
+From: shucheng <shucheng@bd-apaas.com>
+Date: Sat, 3 Jul 2021 13:27:01 +0800
+Subject: [PATCH] yaml
+
+---
+ go.mod | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/go.mod b/go.mod
+index d8824718..865a9e79 100644
+--- a/go.mod
++++ b/go.mod
+@@ -2,6 +2,8 @@ module github.com/drone/drone
+ 
+ replace github.com/docker/docker => github.com/docker/engine v17.12.0-ce-rc1.0.20200309214505-aa6a9891b09c+incompatible
+ 
++replace github.com/drone/drone-yaml => github.com/open-beagle/drone-yaml v1.2.4-beagle.0
++
+ require (
+ 	github.com/99designs/httpsignatures-go v0.0.0-20170731043157-88528bf4ca7e
+ 	github.com/Azure/azure-storage-blob-go v0.7.0
+-- 
+2.25.1
+

@@ -1,0 +1,25 @@
+From 75cddbba46bd5dc02457c3d699e5904b49dc8223 Mon Sep 17 00:00:00 2001
+From: shucheng <shucheng@bd-apaas.com>
+Date: Mon, 7 Jun 2021 00:24:16 +0800
+Subject: [PATCH] config
+
+---
+ handler/api/repos/enable.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/handler/api/repos/enable.go b/handler/api/repos/enable.go
+index 084e6402..ed80d0e4 100644
+--- a/handler/api/repos/enable.go
++++ b/handler/api/repos/enable.go
+@@ -60,7 +60,7 @@ func HandleEnable(
+ 		repo.UserID = user.ID
+ 
+ 		if repo.Config == "" {
+-			repo.Config = ".drone.yml"
++			repo.Config = ".beagle.yml"
+ 		}
+ 		if repo.Signer == "" {
+ 			repo.Signer = uniuri.NewLen(32)
+-- 
+2.25.1
+

@@ -1,0 +1,416 @@
+From a7bb5b8dd99cb2e75449895a47e5aae65cfa763e Mon Sep 17 00:00:00 2001
+From: shucheng <shucheng@bd-apaas.com>
+Date: Tue, 30 Nov 2021 01:15:03 +0800
+Subject: [PATCH] machine
+
+---
+ core/sched.go                                 |  1 +
+ core/stage.go                                 |  1 +
+ operator/manager/manager.go                   |  3 ++
+ operator/runner/env.go                        | 35 ++++++++++---------
+ operator/runner/runner.go                     |  1 +
+ scheduler/queue/queue.go                      | 30 +++++++++++++++-
+ store/build/build.go                          |  2 ++
+ store/build/scan.go                           |  1 +
+ store/shared/migrate/mysql/ddl_gen.go         |  1 +
+ .../mysql/files/005_create_table_stages.sql   |  1 +
+ store/shared/migrate/postgres/ddl_gen.go      |  1 +
+ .../files/005_create_table_stages.sql         |  1 +
+ store/shared/migrate/sqlite/ddl_gen.go        |  1 +
+ .../sqlite/files/005_create_table_stages.sql  |  1 +
+ store/stage/scan.go                           |  3 ++
+ store/stage/stage.go                          |  5 +++
+ trigger/trigger.go                            |  1 +
+ 17 files changed, 71 insertions(+), 18 deletions(-)
+
+diff --git a/core/sched.go b/core/sched.go
+index 58e2488f..2961cc2c 100644
+--- a/core/sched.go
++++ b/core/sched.go
+@@ -19,6 +19,7 @@ import "context"
+ // Filter provides filter criteria to limit stages requested
+ // from the scheduler.
+ type Filter struct {
++	Machine string
+ 	Kind    string
+ 	Type    string
+ 	OS      string
+diff --git a/core/stage.go b/core/stage.go
+index c4ca9471..738c4eba 100644
+--- a/core/stage.go
++++ b/core/stage.go
+@@ -35,6 +35,7 @@ type (
+ 		Arch      string            `json:"arch"`
+ 		Variant   string            `json:"variant,omitempty"`
+ 		Kernel    string            `json:"kernel,omitempty"`
++		Runner    string            `json:"runner,omitempty"`
+ 		Limit     int               `json:"limit,omitempty"`
+ 		LimitRepo int               `json:"throttle,omitempty"`
+ 		Started   int64             `json:"started"`
+diff --git a/operator/manager/manager.go b/operator/manager/manager.go
+index f20e51e7..ff3c067e 100644
+--- a/operator/manager/manager.go
++++ b/operator/manager/manager.go
+@@ -92,6 +92,7 @@ type (
+ 	// build from the queue. This allows an agent, for example,
+ 	// to request a build that matches its architecture and kernel.
+ 	Request struct {
++		Machine string            `json:"machine"`
+ 		Kind    string            `json:"kind"`
+ 		Type    string            `json:"type"`
+ 		OS      string            `json:"os"`
+@@ -172,6 +173,7 @@ type Manager struct {
+ func (m *Manager) Request(ctx context.Context, args *Request) (*core.Stage, error) {
+ 	logger := logrus.WithFields(
+ 		logrus.Fields{
++			"machine": args.Machine,
+ 			"kind":    args.Kind,
+ 			"type":    args.Type,
+ 			"os":      args.OS,
+@@ -183,6 +185,7 @@ func (m *Manager) Request(ctx context.Context, args *Request) (*core.Stage, erro
+ 	logger.Debugln("manager: request queue item")
+ 
+ 	stage, err := m.Scheduler.Request(ctx, core.Filter{
++		Machine: args.Machine,
+ 		Kind:    args.Kind,
+ 		Type:    args.Type,
+ 		OS:      args.OS,
+diff --git a/operator/runner/env.go b/operator/runner/env.go
+index 627143a5..e9cc6334 100644
+--- a/operator/runner/env.go
++++ b/operator/runner/env.go
+@@ -79,6 +79,7 @@ func stageEnviron(stage *core.Stage) map[string]string {
+ 		"DRONE_STAGE_OS":         stage.OS,
+ 		"DRONE_STAGE_ARCH":       stage.Arch,
+ 		"DRONE_STAGE_VARIANT":    stage.Variant,
++		"DRONE_STAGE_RUNNER":     stage.Runner,
+ 		"DRONE_STAGE_DEPENDS_ON": strings.Join(stage.DependsOn, ","),
+ 	}
+ }
+@@ -112,23 +113,23 @@ func buildEnviron(build *core.Build) map[string]string {
+ 		// these are legacy configuration parameters for backward
+ 		// compatibility with drone 0.8.
+ 		//
+-		"CI_BUILD_NUMBER":              fmt.Sprint(build.Number),
+-		"CI_PARENT_BUILD_NUMBER":       fmt.Sprint(build.Parent),
+-		"CI_BUILD_CREATED":             fmt.Sprint(build.Created),
+-		"CI_BUILD_STARTED":             fmt.Sprint(build.Started),
+-		"CI_BUILD_FINISHED":            fmt.Sprint(build.Finished),
+-		"CI_BUILD_STATUS":              build.Status,
+-		"CI_BUILD_EVENT":               build.Event,
+-		"CI_BUILD_LINK":                build.Link,
+-		"CI_BUILD_TARGET":              build.Deploy,
+-		"CI_COMMIT_SHA":                build.After,
+-		"CI_COMMIT_REF":                build.Ref,
+-		"CI_COMMIT_BRANCH":             build.Target,
+-		"CI_COMMIT_MESSAGE":            build.Message,
+-		"CI_COMMIT_AUTHOR":             build.Author,
+-		"CI_COMMIT_AUTHOR_NAME":        build.AuthorName,
+-		"CI_COMMIT_AUTHOR_EMAIL":       build.AuthorEmail,
+-		"CI_COMMIT_AUTHOR_AVATAR":      build.AuthorAvatar,
++		"CI_BUILD_NUMBER":         fmt.Sprint(build.Number),
++		"CI_PARENT_BUILD_NUMBER":  fmt.Sprint(build.Parent),
++		"CI_BUILD_CREATED":        fmt.Sprint(build.Created),
++		"CI_BUILD_STARTED":        fmt.Sprint(build.Started),
++		"CI_BUILD_FINISHED":       fmt.Sprint(build.Finished),
++		"CI_BUILD_STATUS":         build.Status,
++		"CI_BUILD_EVENT":          build.Event,
++		"CI_BUILD_LINK":           build.Link,
++		"CI_BUILD_TARGET":         build.Deploy,
++		"CI_COMMIT_SHA":           build.After,
++		"CI_COMMIT_REF":           build.Ref,
++		"CI_COMMIT_BRANCH":        build.Target,
++		"CI_COMMIT_MESSAGE":       build.Message,
++		"CI_COMMIT_AUTHOR":        build.Author,
++		"CI_COMMIT_AUTHOR_NAME":   build.AuthorName,
++		"CI_COMMIT_AUTHOR_EMAIL":  build.AuthorEmail,
++		"CI_COMMIT_AUTHOR_AVATAR": build.AuthorAvatar,
+ 	}
+ 	if strings.HasPrefix(build.Ref, "refs/tags/") {
+ 		env["DRONE_TAG"] = strings.TrimPrefix(build.Ref, "refs/tags/")
+diff --git a/operator/runner/runner.go b/operator/runner/runner.go
+index 25c97a7f..3484c210 100644
+--- a/operator/runner/runner.go
++++ b/operator/runner/runner.go
+@@ -564,6 +564,7 @@ func (r *Runner) poll(ctx context.Context) error {
+ 	p, err := r.Manager.Request(ctx, &manager.Request{
+ 		Kind:    "pipeline",
+ 		Type:    "docker",
++		Machine: r.Machine,
+ 		OS:      r.OS,
+ 		Arch:    r.Arch,
+ 		Kernel:  r.Kernel,
+diff --git a/scheduler/queue/queue.go b/scheduler/queue/queue.go
+index 1354d4f5..ec32baa8 100644
+--- a/scheduler/queue/queue.go
++++ b/scheduler/queue/queue.go
+@@ -21,6 +21,7 @@ import (
+ 
+ 	"github.com/drone/drone/core"
+ 	"github.com/drone/drone/service/redisdb"
++	"github.com/sirupsen/logrus"
+ 
+ 	"github.com/drone/drone-go/drone"
+ )
+@@ -88,6 +89,7 @@ func (q *queue) Resume(ctx context.Context) error {
+ 
+ func (q *queue) Request(ctx context.Context, params core.Filter) (*core.Stage, error) {
+ 	w := &worker{
++		machine: params.Machine,
+ 		kind:    params.Kind,
+ 		typ:     params.Type,
+ 		os:      params.OS,
+@@ -97,6 +99,18 @@ func (q *queue) Request(ctx context.Context, params core.Filter) (*core.Stage, e
+ 		labels:  params.Labels,
+ 		channel: make(chan *core.Stage),
+ 	}
++
++	if w.machine != "" {
++		logrus.WithFields(
++			logrus.Fields{
++				"machine": w.machine,
++				"kind":    w.kind,
++				"typ":     w.typ,
++				"labels":  w.labels,
++			},
++		).Debugln("connect the runner agent")
++	}
++
+ 	q.Lock()
+ 	q.workers[w] = struct{}{}
+ 	q.Unlock()
+@@ -148,6 +162,15 @@ func (q *queue) signal(ctx context.Context) error {
+ 			continue
+ 		}
+ 
++		if item.Runner != "" {
++			logrus.WithFields(
++				logrus.Fields{
++					"Name":   item.Name,
++					"Runner": item.Runner,
++				},
++			).Debugln("rec pipeline")
++		}
++
+ 		// if the stage defines concurrency limits we
+ 		// need to make sure those limits are not exceeded
+ 		// before proceeding.
+@@ -169,7 +192,7 @@ func (q *queue) signal(ctx context.Context) error {
+ 				continue
+ 			}
+ 
+-			if w.os != "" || w.arch != "" || w.variant != "" || w.kernel != "" {
++			if w.os != "" || w.arch != "" || w.variant != "" || w.kernel != "" || w.machine != "" {
+ 				// the worker is platform-specific. check to ensure
+ 				// the queue item matches the worker platform.
+ 				if w.os != item.OS {
+@@ -188,6 +211,10 @@ func (q *queue) signal(ctx context.Context) error {
+ 				if item.Kernel != "" && item.Kernel != w.kernel {
+ 					continue
+ 				}
++				// edit by mengkzhaoyun , 2021.06.20
++				if item.Runner != "" && item.Runner != w.machine {
++					continue
++				}
+ 			}
+ 
+ 			if len(item.Labels) > 0 || len(w.labels) > 0 {
+@@ -233,6 +260,7 @@ func (q *queue) start() error {
+ }
+ 
+ type worker struct {
++	machine string
+ 	kind    string
+ 	typ     string
+ 	os      string
+diff --git a/store/build/build.go b/store/build/build.go
+index 824b5907..df88a1f2 100644
+--- a/store/build/build.go
++++ b/store/build/build.go
+@@ -673,6 +673,7 @@ INSERT INTO stages (
+ ,stage_arch
+ ,stage_variant
+ ,stage_kernel
++,stage_runner
+ ,stage_machine
+ ,stage_started
+ ,stage_stopped
+@@ -700,6 +701,7 @@ INSERT INTO stages (
+ ,:stage_arch
+ ,:stage_variant
+ ,:stage_kernel
++,:stage_runner
+ ,:stage_machine
+ ,:stage_started
+ ,:stage_stopped
+diff --git a/store/build/scan.go b/store/build/scan.go
+index 4377ed28..38419a3e 100644
+--- a/store/build/scan.go
++++ b/store/build/scan.go
+@@ -86,6 +86,7 @@ func toStageParams(stage *core.Stage) map[string]interface{} {
+ 		"stage_arch":       stage.Arch,
+ 		"stage_variant":    stage.Variant,
+ 		"stage_kernel":     stage.Kernel,
++		"stage_runner":     stage.Runner,
+ 		"stage_machine":    stage.Machine,
+ 		"stage_started":    stage.Started,
+ 		"stage_stopped":    stage.Stopped,
+diff --git a/store/shared/migrate/mysql/ddl_gen.go b/store/shared/migrate/mysql/ddl_gen.go
+index 156aa456..327bccfc 100644
+--- a/store/shared/migrate/mysql/ddl_gen.go
++++ b/store/shared/migrate/mysql/ddl_gen.go
+@@ -476,6 +476,7 @@ CREATE TABLE IF NOT EXISTS stages (
+ ,stage_arch        VARCHAR(50)
+ ,stage_variant     VARCHAR(10)
+ ,stage_kernel      VARCHAR(50)
++,stage_runner      VARCHAR(500)
+ ,stage_machine     VARCHAR(500)
+ ,stage_started     INTEGER
+ ,stage_stopped     INTEGER
+diff --git a/store/shared/migrate/mysql/files/005_create_table_stages.sql b/store/shared/migrate/mysql/files/005_create_table_stages.sql
+index f835f02c..d1522238 100644
+--- a/store/shared/migrate/mysql/files/005_create_table_stages.sql
++++ b/store/shared/migrate/mysql/files/005_create_table_stages.sql
+@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS stages (
+ ,stage_arch        VARCHAR(50)
+ ,stage_variant     VARCHAR(10)
+ ,stage_kernel      VARCHAR(50)
++,stage_runner      VARCHAR(500)
+ ,stage_machine     VARCHAR(500)
+ ,stage_started     INTEGER
+ ,stage_stopped     INTEGER
+diff --git a/store/shared/migrate/postgres/ddl_gen.go b/store/shared/migrate/postgres/ddl_gen.go
+index 37ae33e2..46507747 100644
+--- a/store/shared/migrate/postgres/ddl_gen.go
++++ b/store/shared/migrate/postgres/ddl_gen.go
+@@ -473,6 +473,7 @@ CREATE TABLE IF NOT EXISTS stages (
+ ,stage_arch        VARCHAR(50)
+ ,stage_variant     VARCHAR(10)
+ ,stage_kernel      VARCHAR(50)
++,stage_runner      VARCHAR(500)
+ ,stage_machine     VARCHAR(500)
+ ,stage_started     INTEGER
+ ,stage_stopped     INTEGER
+diff --git a/store/shared/migrate/postgres/files/005_create_table_stages.sql b/store/shared/migrate/postgres/files/005_create_table_stages.sql
+index 32505d3c..9a9cfe1c 100644
+--- a/store/shared/migrate/postgres/files/005_create_table_stages.sql
++++ b/store/shared/migrate/postgres/files/005_create_table_stages.sql
+@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS stages (
+ ,stage_arch        VARCHAR(50)
+ ,stage_variant     VARCHAR(10)
+ ,stage_kernel      VARCHAR(50)
++,stage_runner      VARCHAR(500)
+ ,stage_machine     VARCHAR(500)
+ ,stage_started     INTEGER
+ ,stage_stopped     INTEGER
+diff --git a/store/shared/migrate/sqlite/ddl_gen.go b/store/shared/migrate/sqlite/ddl_gen.go
+index 1df96562..18efe0e7 100644
+--- a/store/shared/migrate/sqlite/ddl_gen.go
++++ b/store/shared/migrate/sqlite/ddl_gen.go
+@@ -472,6 +472,7 @@ CREATE TABLE IF NOT EXISTS stages (
+ ,stage_arch        TEXT
+ ,stage_variant     TEXT
+ ,stage_kernel      TEXT
++,stage_runner      TEXT
+ ,stage_machine     TEXT
+ ,stage_started     INTEGER
+ ,stage_stopped     INTEGER
+diff --git a/store/shared/migrate/sqlite/files/005_create_table_stages.sql b/store/shared/migrate/sqlite/files/005_create_table_stages.sql
+index 2c5d1b81..180447de 100644
+--- a/store/shared/migrate/sqlite/files/005_create_table_stages.sql
++++ b/store/shared/migrate/sqlite/files/005_create_table_stages.sql
+@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS stages (
+ ,stage_arch        TEXT
+ ,stage_variant     TEXT
+ ,stage_kernel      TEXT
++,stage_runner      TEXT
+ ,stage_machine     TEXT
+ ,stage_started     INTEGER
+ ,stage_stopped     INTEGER
+diff --git a/store/stage/scan.go b/store/stage/scan.go
+index 1d016da7..d855fe1a 100644
+--- a/store/stage/scan.go
++++ b/store/stage/scan.go
+@@ -45,6 +45,7 @@ func toParams(stage *core.Stage) map[string]interface{} {
+ 		"stage_arch":       stage.Arch,
+ 		"stage_variant":    stage.Variant,
+ 		"stage_kernel":     stage.Kernel,
++		"stage_runner":     stage.Runner,
+ 		"stage_machine":    stage.Machine,
+ 		"stage_started":    stage.Started,
+ 		"stage_stopped":    stage.Stopped,
+@@ -91,6 +92,7 @@ func scanRow(scanner db.Scanner, dest *core.Stage) error {
+ 		&dest.Arch,
+ 		&dest.Variant,
+ 		&dest.Kernel,
++		&dest.Runner,
+ 		&dest.Machine,
+ 		&dest.Started,
+ 		&dest.Stopped,
+@@ -131,6 +133,7 @@ func scanRowStep(scanner db.Scanner, stage *core.Stage, step *nullStep) error {
+ 		&stage.Arch,
+ 		&stage.Variant,
+ 		&stage.Kernel,
++		&stage.Runner,
+ 		&stage.Machine,
+ 		&stage.Started,
+ 		&stage.Stopped,
+diff --git a/store/stage/stage.go b/store/stage/stage.go
+index 140f1833..ccdf58fc 100644
+--- a/store/stage/stage.go
++++ b/store/stage/stage.go
+@@ -234,6 +234,7 @@ SELECT
+ ,stage_arch
+ ,stage_variant
+ ,stage_kernel
++,stage_runner
+ ,stage_machine
+ ,stage_started
+ ,stage_stopped
+@@ -302,6 +303,7 @@ SELECT
+ ,stage_arch
+ ,stage_variant
+ ,stage_kernel
++,stage_runner
+ ,stage_machine
+ ,stage_started
+ ,stage_stopped
+@@ -347,6 +349,7 @@ SET
+ ,stage_arch = :stage_arch
+ ,stage_variant = :stage_variant
+ ,stage_kernel = :stage_kernel
++,stage_runner = :stage_runner
+ ,stage_machine = :stage_machine
+ ,stage_started = :stage_started
+ ,stage_stopped = :stage_stopped
+@@ -379,6 +382,7 @@ INSERT INTO stages (
+ ,stage_arch
+ ,stage_variant
+ ,stage_kernel
++,stage_runner
+ ,stage_machine
+ ,stage_started
+ ,stage_stopped
+@@ -406,6 +410,7 @@ INSERT INTO stages (
+ ,:stage_arch
+ ,:stage_variant
+ ,:stage_kernel
++,:stage_runner
+ ,:stage_machine
+ ,:stage_started
+ ,:stage_stopped
+diff --git a/trigger/trigger.go b/trigger/trigger.go
+index 18db04d0..9ed95b73 100644
+--- a/trigger/trigger.go
++++ b/trigger/trigger.go
+@@ -393,6 +393,7 @@ func (t *triggerer) Trigger(ctx context.Context, repo *core.Repository, base *co
+ 			Arch:      match.Platform.Arch,
+ 			Variant:   match.Platform.Variant,
+ 			Kernel:    match.Platform.Version,
++			Runner:    match.Platform.Runner,
+ 			Limit:     match.Concurrency.Limit,
+ 			LimitRepo: int(repo.Throttle),
+ 			Status:    core.StatusWaiting,
+-- 
+2.25.1
+
