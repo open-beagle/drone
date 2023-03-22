@@ -17,7 +17,7 @@ index 013c38e6..ea88cff2 100644
  
 +replace github.com/drone/drone-yaml => github.com/open-beagle/drone-yaml v1.2.4-beagle.0
 +
-+replace github.com/drone/drone-ui => github.com/open-beagle/drone-ui v2.9.1-beagle.0+incompatible
++replace github.com/drone/drone-ui => github.com/open-beagle/drone-ui v2.9.1-beagle.1+incompatible
 +
  require (
  	github.com/99designs/httpsignatures-go v0.0.0-20170731043157-88528bf4ca7e
