@@ -1,19 +1,20 @@
-From 72af2843470d859e96d65636a716ea981cb90445 Mon Sep 17 00:00:00 2001
+From 6424607c37518f1093b8f2dd66a8886cfe6d5e93 Mon Sep 17 00:00:00 2001
 From: shucheng <shucheng@bd-apaas.com>
-Date: Wed, 22 Mar 2023 12:42:59 +0800
+Date: Wed, 22 Mar 2023 13:55:35 +0800
 Subject: [PATCH] user alias
 
 ---
- core/user.go                                                  | 1 +
- store/shared/migrate/mysql/ddl_gen.go                         | 1 +
- store/shared/migrate/mysql/files/001_create_table_user.sql    | 1 +
- store/shared/migrate/postgres/ddl_gen.go                      | 1 +
- store/shared/migrate/postgres/files/001_create_table_user.sql | 1 +
- store/shared/migrate/sqlite/ddl_gen.go                        | 1 +
- store/shared/migrate/sqlite/files/001_create_table_user.sql   | 1 +
- store/user/scan.go                                            | 2 ++
- store/user/user.go                                            | 4 ++++
- 9 files changed, 13 insertions(+)
+ core/user.go                                              | 1 +
+ handler/api/users/update.go                               | 8 ++++++--
+ store/shared/migrate/mysql/ddl_gen.go                     | 1 +
+ .../shared/migrate/mysql/files/001_create_table_user.sql  | 1 +
+ store/shared/migrate/postgres/ddl_gen.go                  | 1 +
+ .../migrate/postgres/files/001_create_table_user.sql      | 1 +
+ store/shared/migrate/sqlite/ddl_gen.go                    | 1 +
+ .../shared/migrate/sqlite/files/001_create_table_user.sql | 1 +
+ store/user/scan.go                                        | 2 ++
+ store/user/user.go                                        | 4 ++++
+ 10 files changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/core/user.go b/core/user.go
 index e9fcaa9d..e77f3c25 100644
@@ -27,6 +28,32 @@ index e9fcaa9d..e77f3c25 100644
  		Email     string `json:"email"`
  		Machine   bool   `json:"machine"`
  		Admin     bool   `json:"admin"`
+diff --git a/handler/api/users/update.go b/handler/api/users/update.go
+index af320c1e..bfbea747 100644
+--- a/handler/api/users/update.go
++++ b/handler/api/users/update.go
+@@ -27,8 +27,9 @@ import (
+ )
+ 
+ type userInput struct {
+-	Admin  *bool `json:"admin"`
+-	Active *bool `json:"active"`
++	Admin  *bool   `json:"admin"`
++	Active *bool   `json:"active"`
++	Alias  *string `json:"alias"`
+ }
+ 
+ // HandleUpdate returns an http.HandlerFunc that processes an http.Request
+@@ -66,6 +67,9 @@ func HandleUpdate(users core.UserStore, transferer core.Transferer) http.Handler
+ 				user.Admin = false
+ 			}
+ 		}
++		if in.Alias != nil {
++			user.Alias = *in.Alias
++		}
+ 		err = users.Update(r.Context(), user)
+ 		if err != nil {
+ 			render.InternalError(w, err)
 diff --git a/store/shared/migrate/mysql/ddl_gen.go b/store/shared/migrate/mysql/ddl_gen.go
 index 156aa456..0bbf2369 100644
 --- a/store/shared/migrate/mysql/ddl_gen.go
