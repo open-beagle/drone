@@ -1,6 +1,6 @@
-From 6daac664199d1f9f0bd8c25a49bb922704f46cda Mon Sep 17 00:00:00 2001
+From efe621cac8e77b7aa3d5066323bfd5f2551ef2d8 Mon Sep 17 00:00:00 2001
 From: shucheng <shucheng@bd-apaas.com>
-Date: Wed, 22 Mar 2023 11:06:47 +0800
+Date: Wed, 22 Mar 2023 12:03:45 +0800
 Subject: [PATCH] user alias
 
 ---
@@ -11,8 +11,9 @@ Subject: [PATCH] user alias
  store/shared/migrate/postgres/files/001_create_table_user.sql | 1 +
  store/shared/migrate/sqlite/ddl_gen.go                        | 1 +
  store/shared/migrate/sqlite/files/001_create_table_user.sql   | 1 +
+ store/user/scan.go                                            | 2 ++
  store/user/user.go                                            | 4 ++++
- 8 files changed, 11 insertions(+)
+ 9 files changed, 13 insertions(+)
 
 diff --git a/core/user.go b/core/user.go
 index e9fcaa9d..e77f3c25 100644
@@ -98,6 +99,26 @@ index 3e09b406..878a5892 100644
  ,user_email         TEXT
  ,user_admin         BOOLEAN
  ,user_machine       BOOLEAN
+diff --git a/store/user/scan.go b/store/user/scan.go
+index 015b1e3b..7488a65a 100644
+--- a/store/user/scan.go
++++ b/store/user/scan.go
+@@ -36,6 +36,7 @@ func toParams(encrypt encrypt.Encrypter, u *core.User) (map[string]interface{},
+ 	return map[string]interface{}{
+ 		"user_id":            u.ID,
+ 		"user_login":         u.Login,
++		"user_alias":         u.Alias,
+ 		"user_email":         u.Email,
+ 		"user_admin":         u.Admin,
+ 		"user_machine":       u.Machine,
+@@ -60,6 +61,7 @@ func scanRow(encrypt encrypt.Encrypter, scanner db.Scanner, dest *core.User) err
+ 	err := scanner.Scan(
+ 		&dest.ID,
+ 		&dest.Login,
++		&dest.Alias,
+ 		&dest.Email,
+ 		&dest.Admin,
+ 		&dest.Machine,
 diff --git a/store/user/user.go b/store/user/user.go
 index 32c51a5f..35b859a8 100644
 --- a/store/user/user.go
