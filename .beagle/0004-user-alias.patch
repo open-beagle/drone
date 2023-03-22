@@ -1,32 +1,72 @@
-From efe621cac8e77b7aa3d5066323bfd5f2551ef2d8 Mon Sep 17 00:00:00 2001
+From b58d79f9fb8c641bc59d13ceedcc37f2700c9035 Mon Sep 17 00:00:00 2001
 From: shucheng <shucheng@bd-apaas.com>
-Date: Wed, 22 Mar 2023 12:03:45 +0800
+Date: Wed, 22 Mar 2023 12:17:46 +0800
 Subject: [PATCH] user alias
 
 ---
- core/user.go                                                  | 1 +
- store/shared/migrate/mysql/ddl_gen.go                         | 1 +
- store/shared/migrate/mysql/files/001_create_table_user.sql    | 1 +
- store/shared/migrate/postgres/ddl_gen.go                      | 1 +
- store/shared/migrate/postgres/files/001_create_table_user.sql | 1 +
- store/shared/migrate/sqlite/ddl_gen.go                        | 1 +
- store/shared/migrate/sqlite/files/001_create_table_user.sql   | 1 +
- store/user/scan.go                                            | 2 ++
- store/user/user.go                                            | 4 ++++
- 9 files changed, 13 insertions(+)
+ core/user.go                                  | 34 ++++++++++---------
+ store/shared/migrate/mysql/ddl_gen.go         |  1 +
+ .../mysql/files/001_create_table_user.sql     |  1 +
+ store/shared/migrate/postgres/ddl_gen.go      |  1 +
+ .../postgres/files/001_create_table_user.sql  |  1 +
+ store/shared/migrate/sqlite/ddl_gen.go        |  1 +
+ .../sqlite/files/001_create_table_user.sql    |  1 +
+ store/user/scan.go                            |  2 ++
+ store/user/user.go                            |  4 +++
+ 9 files changed, 30 insertions(+), 16 deletions(-)
 
 diff --git a/core/user.go b/core/user.go
-index e9fcaa9d..e77f3c25 100644
+index e9fcaa9d..8bd533de 100644
 --- a/core/user.go
 +++ b/core/user.go
-@@ -31,6 +31,7 @@ type (
+@@ -16,6 +16,7 @@ package core
+ 
+ import (
+ 	"context"
++	"database/sql"
+ 	"errors"
+ 
+ 	"github.com/asaskevich/govalidator"
+@@ -29,22 +30,23 @@ var (
+ type (
+ 	// User represents a user of the system.
  	User struct {
- 		ID        int64  `json:"id"`
- 		Login     string `json:"login"`
-+		Alias     string `json:"alias"`
- 		Email     string `json:"email"`
- 		Machine   bool   `json:"machine"`
- 		Admin     bool   `json:"admin"`
+-		ID        int64  `json:"id"`
+-		Login     string `json:"login"`
+-		Email     string `json:"email"`
+-		Machine   bool   `json:"machine"`
+-		Admin     bool   `json:"admin"`
+-		Active    bool   `json:"active"`
+-		Avatar    string `json:"avatar"`
+-		Syncing   bool   `json:"syncing"`
+-		Synced    int64  `json:"synced"`
+-		Created   int64  `json:"created"`
+-		Updated   int64  `json:"updated"`
+-		LastLogin int64  `json:"last_login"`
+-		Token     string `json:"-"`
+-		Refresh   string `json:"-"`
+-		Expiry    int64  `json:"-"`
+-		Hash      string `json:"-"`
++		ID        int64          `json:"id"`
++		Login     string         `json:"login"`
++		Alias     sql.NullString `json:"alias"`
++		Email     string         `json:"email"`
++		Machine   bool           `json:"machine"`
++		Admin     bool           `json:"admin"`
++		Active    bool           `json:"active"`
++		Avatar    string         `json:"avatar"`
++		Syncing   bool           `json:"syncing"`
++		Synced    int64          `json:"synced"`
++		Created   int64          `json:"created"`
++		Updated   int64          `json:"updated"`
++		LastLogin int64          `json:"last_login"`
++		Token     string         `json:"-"`
++		Refresh   string         `json:"-"`
++		Expiry    int64          `json:"-"`
++		Hash      string         `json:"-"`
+ 	}
+ 
+ 	// UserParams defines user query parameters.
 diff --git a/store/shared/migrate/mysql/ddl_gen.go b/store/shared/migrate/mysql/ddl_gen.go
 index 156aa456..0bbf2369 100644
 --- a/store/shared/migrate/mysql/ddl_gen.go
