@@ -1,0 +1,139 @@
+From 6daac664199d1f9f0bd8c25a49bb922704f46cda Mon Sep 17 00:00:00 2001
+From: shucheng <shucheng@bd-apaas.com>
+Date: Wed, 22 Mar 2023 11:06:47 +0800
+Subject: [PATCH] user alias
+
+---
+ core/user.go                                                  | 1 +
+ store/shared/migrate/mysql/ddl_gen.go                         | 1 +
+ store/shared/migrate/mysql/files/001_create_table_user.sql    | 1 +
+ store/shared/migrate/postgres/ddl_gen.go                      | 1 +
+ store/shared/migrate/postgres/files/001_create_table_user.sql | 1 +
+ store/shared/migrate/sqlite/ddl_gen.go                        | 1 +
+ store/shared/migrate/sqlite/files/001_create_table_user.sql   | 1 +
+ store/user/user.go                                            | 4 ++++
+ 8 files changed, 11 insertions(+)
+
+diff --git a/core/user.go b/core/user.go
+index e9fcaa9d..e77f3c25 100644
+--- a/core/user.go
++++ b/core/user.go
+@@ -31,6 +31,7 @@ type (
+ 	User struct {
+ 		ID        int64  `json:"id"`
+ 		Login     string `json:"login"`
++		Alias     string `json:"alias"`
+ 		Email     string `json:"email"`
+ 		Machine   bool   `json:"machine"`
+ 		Admin     bool   `json:"admin"`
+diff --git a/store/shared/migrate/mysql/ddl_gen.go b/store/shared/migrate/mysql/ddl_gen.go
+index 156aa456..0bbf2369 100644
+--- a/store/shared/migrate/mysql/ddl_gen.go
++++ b/store/shared/migrate/mysql/ddl_gen.go
+@@ -287,6 +287,7 @@ var createTableUsers = `
+ CREATE TABLE IF NOT EXISTS users (
+  user_id            INTEGER PRIMARY KEY AUTO_INCREMENT
+ ,user_login         VARCHAR(250)
++,user_alias         VARCHAR(250)
+ ,user_email         VARCHAR(500)
+ ,user_admin         BOOLEAN
+ ,user_machine       BOOLEAN
+diff --git a/store/shared/migrate/mysql/files/001_create_table_user.sql b/store/shared/migrate/mysql/files/001_create_table_user.sql
+index b90f6695..393e1968 100644
+--- a/store/shared/migrate/mysql/files/001_create_table_user.sql
++++ b/store/shared/migrate/mysql/files/001_create_table_user.sql
+@@ -3,6 +3,7 @@
+ CREATE TABLE IF NOT EXISTS users (
+  user_id            INTEGER PRIMARY KEY AUTO_INCREMENT
+ ,user_login         VARCHAR(250)
++,user_alias         VARCHAR(250)
+ ,user_email         VARCHAR(500)
+ ,user_admin         BOOLEAN
+ ,user_machine       BOOLEAN
+diff --git a/store/shared/migrate/postgres/ddl_gen.go b/store/shared/migrate/postgres/ddl_gen.go
+index d87aaf50..eacad26f 100644
+--- a/store/shared/migrate/postgres/ddl_gen.go
++++ b/store/shared/migrate/postgres/ddl_gen.go
+@@ -283,6 +283,7 @@ var createTableUsers = `
+ CREATE TABLE IF NOT EXISTS users (
+  user_id            SERIAL PRIMARY KEY
+ ,user_login         VARCHAR(250)
++,user_alias         VARCHAR(250)
+ ,user_email         VARCHAR(500)
+ ,user_admin         BOOLEAN
+ ,user_active        BOOLEAN
+diff --git a/store/shared/migrate/postgres/files/001_create_table_user.sql b/store/shared/migrate/postgres/files/001_create_table_user.sql
+index 47432c8d..69430d54 100644
+--- a/store/shared/migrate/postgres/files/001_create_table_user.sql
++++ b/store/shared/migrate/postgres/files/001_create_table_user.sql
+@@ -3,6 +3,7 @@
+ CREATE TABLE IF NOT EXISTS users (
+  user_id            SERIAL PRIMARY KEY
+ ,user_login         VARCHAR(250)
++,user_alias         VARCHAR(250)
+ ,user_email         VARCHAR(500)
+ ,user_admin         BOOLEAN
+ ,user_active        BOOLEAN
+diff --git a/store/shared/migrate/sqlite/ddl_gen.go b/store/shared/migrate/sqlite/ddl_gen.go
+index ea5db110..50cf4e78 100644
+--- a/store/shared/migrate/sqlite/ddl_gen.go
++++ b/store/shared/migrate/sqlite/ddl_gen.go
+@@ -283,6 +283,7 @@ var createTableUsers = `
+ CREATE TABLE IF NOT EXISTS users (
+  user_id            INTEGER PRIMARY KEY AUTOINCREMENT
+ ,user_login         TEXT COLLATE NOCASE
++,user_alias         TEXT
+ ,user_email         TEXT
+ ,user_admin         BOOLEAN
+ ,user_machine       BOOLEAN
+diff --git a/store/shared/migrate/sqlite/files/001_create_table_user.sql b/store/shared/migrate/sqlite/files/001_create_table_user.sql
+index 3e09b406..878a5892 100644
+--- a/store/shared/migrate/sqlite/files/001_create_table_user.sql
++++ b/store/shared/migrate/sqlite/files/001_create_table_user.sql
+@@ -3,6 +3,7 @@
+ CREATE TABLE IF NOT EXISTS users (
+  user_id            INTEGER PRIMARY KEY AUTOINCREMENT
+ ,user_login         TEXT COLLATE NOCASE
++,user_alias         TEXT
+ ,user_email         TEXT
+ ,user_admin         BOOLEAN
+ ,user_machine       BOOLEAN
+diff --git a/store/user/user.go b/store/user/user.go
+index 32c51a5f..35b859a8 100644
+--- a/store/user/user.go
++++ b/store/user/user.go
+@@ -225,6 +225,7 @@ const queryBase = `
+ SELECT
+  user_id
+ ,user_login
++,user_alias
+ ,user_email
+ ,user_admin
+ ,user_machine
+@@ -272,6 +273,7 @@ const stmtUpdate = `
+ UPDATE users
+ SET
+  user_email         = :user_email
++,user_alias         = :user_alias
+ ,user_admin         = :user_admin
+ ,user_active        = :user_active
+ ,user_avatar        = :user_avatar
+@@ -294,6 +296,7 @@ DELETE FROM users WHERE user_id = :user_id
+ const stmtInsert = `
+ INSERT INTO users (
+  user_login
++,user_alias 
+ ,user_email
+ ,user_admin
+ ,user_machine
+@@ -310,6 +313,7 @@ INSERT INTO users (
+ ,user_hash
+ ) VALUES (
+  :user_login
++,:user_alias 
+ ,:user_email
+ ,:user_admin
+ ,:user_machine
+-- 
+2.25.1
+

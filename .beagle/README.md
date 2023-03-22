@@ -21,7 +21,8 @@ registry.cn-qingdao.aliyuncs.com/wod/golang:1.19-alpine \
 bash -c '
 git apply .beagle/0001-config.patch && \
 git apply .beagle/0002-machine.patch && \
-git apply .beagle/0003-yaml.patch
+git apply .beagle/0003-yaml.patch && \
+git apply .beagle/0004-user-alias.patch
 '
 
 docker run -it --rm \
