@@ -1,0 +1,36 @@
+From 209607d53890e60fc82a4547989bf8aeab4f2562 Mon Sep 17 00:00:00 2001
+From: shucheng <shucheng@bd-apaas.com>
+Date: Thu, 23 Mar 2023 16:35:09 +0800
+Subject: [PATCH] license
+
+---
+ service/license/load.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/service/license/load.go b/service/license/load.go
+index 8163dd31..87c7d65b 100644
+--- a/service/license/load.go
++++ b/service/license/load.go
+@@ -12,8 +12,8 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
+-// +build !nolimit
+-// +build !oss
++//go:build !nolimit && !oss
++// +build !nolimit,!oss
+ 
+ package license
+ 
+@@ -27,7 +27,7 @@ import (
+ )
+ 
+ // embedded public key used to verify license signatures.
+-var publicKey = []byte("GB/hFnXEg63vDZ2W6mKFhLxZTuxMrlN/C/0iVZ2LfPQ=")
++var publicKey = []byte("ajmJ+hb2Nvx+1yKIf0kWjROtWD0hjG8ChE5JljtX0us=")
+ 
+ // License renewal endpoint.
+ const licenseEndpoint = "https://license.drone.io/api/v1/license/renew"
+-- 
+2.25.1
+

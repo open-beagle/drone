@@ -22,7 +22,8 @@ bash -c '
 git apply .beagle/0001-config.patch && \
 git apply .beagle/0002-machine.patch && \
 git apply .beagle/0003-yaml.patch && \
-git apply .beagle/0004-user-alias.patch
+git apply .beagle/0004-user-alias.patch && \
+git apply .beagle/0005-license.patch
 '
 
 docker run -it --rm \
