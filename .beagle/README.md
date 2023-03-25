@@ -7,7 +7,7 @@ git remote add upstream git@github.com:harness/drone.git
 
 git fetch upstream
 
-git merge v2.12.1
+git merge v2.16.0
 ```
 
 ## debug

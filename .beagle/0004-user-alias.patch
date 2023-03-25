@@ -170,7 +170,7 @@ index 32c51a5f..35b859a8 100644
  const stmtInsert = `
  INSERT INTO users (
   user_login
-+,user_alias 
++,user_alias
  ,user_email
  ,user_admin
  ,user_machine
@@ -178,7 +178,7 @@ index 32c51a5f..35b859a8 100644
  ,user_hash
  ) VALUES (
   :user_login
-+,:user_alias 
++,:user_alias
  ,:user_email
  ,:user_admin
  ,:user_machine
