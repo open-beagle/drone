@@ -1,14 +1,14 @@
-From 209607d53890e60fc82a4547989bf8aeab4f2562 Mon Sep 17 00:00:00 2001
+From f6d90c2b113ad24e301458280a112ea1e8e06dc0 Mon Sep 17 00:00:00 2001
 From: shucheng <shucheng@bd-apaas.com>
-Date: Thu, 23 Mar 2023 16:35:09 +0800
+Date: Mon, 27 Mar 2023 15:39:44 +0800
 Subject: [PATCH] license
 
 ---
- service/license/load.go | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ service/license/load.go | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/service/license/load.go b/service/license/load.go
-index 8163dd31..87c7d65b 100644
+index 8163dd31..fff0fe6e 100644
 --- a/service/license/load.go
 +++ b/service/license/load.go
 @@ -12,8 +12,8 @@
@@ -31,6 +31,14 @@ index 8163dd31..87c7d65b 100644
  
  // License renewal endpoint.
  const licenseEndpoint = "https://license.drone.io/api/v1/license/renew"
+@@ -83,6 +83,7 @@ func Load(path string) (*core.License, error) {
+ 		dat := new(core.License)
+ 		json.Unmarshal(decoded.Dat, dat)
+ 		license.Repos = dat.Repos
++		license.Kind = dat.Kind
+ 	}
+ 
+ 	return license, err
 -- 
-2.25.1
+2.35.1
 
