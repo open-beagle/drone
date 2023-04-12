@@ -33,6 +33,7 @@ docker run -it --rm \
 -w /go/src/github.com/drone/drone \
 registry.cn-qingdao.aliyuncs.com/wod/golang:1.20-alpine \
 sh -c "
+rm -rf vendor && \
 go mod tidy && \
 go mod vendor
 "
