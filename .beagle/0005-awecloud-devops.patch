@@ -1,0 +1,37 @@
+From 68a01aa815960b8c75a65035fbc045c4e4b51f17 Mon Sep 17 00:00:00 2001
+From: shucheng <shucheng@bd-apaas.com>
+Date: Thu, 13 Apr 2023 00:36:24 +0800
+Subject: [PATCH] awecloud-devops
+
+---
+ cmd/drone-server/inject_server.go | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/cmd/drone-server/inject_server.go b/cmd/drone-server/inject_server.go
+index 07302bd5..072de9f2 100644
+--- a/cmd/drone-server/inject_server.go
++++ b/cmd/drone-server/inject_server.go
+@@ -61,13 +61,13 @@ var serverSet = wire.NewSet(
+ // router that is serves the provided handlers.
+ func provideRouter(api api.Server, web web.Server, rpcv1 rpcHandlerV1, rpcv2 rpcHandlerV2, healthz healthzHandler, metrics *metric.Server, pprof pprofHandler) *chi.Mux {
+ 	r := chi.NewRouter()
+-	r.Mount("/healthz", healthz)
+-	r.Mount("/metrics", metrics)
+-	r.Mount("/api", api.Handler())
+-	r.Mount("/rpc/v2", rpcv2)
+-	r.Mount("/rpc", rpcv1)
+-	r.Mount("/", web.Handler())
+-	r.Mount("/debug", pprof)
++	r.Mount("/awecloud/devops/healthz", healthz)
++	r.Mount("/awecloud/devops/metrics", metrics)
++	r.Mount("/awecloud/devops/api", api.Handler())
++	r.Mount("/awecloud/devops/rpc/v2", rpcv2)
++	r.Mount("/awecloud/devops/rpc", rpcv1)
++	r.Mount("/awecloud/devops/", web.Handler())
++	r.Mount("/awecloud/devops/debug", pprof)
+ 	return r
+ }
+ 
+-- 
+2.39.2
+
