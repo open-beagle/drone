@@ -1,12 +1,89 @@
-From 68a01aa815960b8c75a65035fbc045c4e4b51f17 Mon Sep 17 00:00:00 2001
+From d79921677735bc4fcb4cb1d31a2b4d4cc1d39138 Mon Sep 17 00:00:00 2001
 From: shucheng <shucheng@bd-apaas.com>
-Date: Thu, 13 Apr 2023 00:36:24 +0800
+Date: Thu, 13 Apr 2023 11:40:06 +0800
 Subject: [PATCH] awecloud-devops
 
 ---
+ cmd/drone-server/inject_login.go  | 15 ++++++++-------
  cmd/drone-server/inject_server.go | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ handler/web/login.go              | 10 +++++-----
+ 3 files changed, 20 insertions(+), 19 deletions(-)
 
+diff --git a/cmd/drone-server/inject_login.go b/cmd/drone-server/inject_login.go
+index 00dc1c26..14601e57 100644
+--- a/cmd/drone-server/inject_login.go
++++ b/cmd/drone-server/inject_login.go
+@@ -15,6 +15,8 @@
+ package main
+ 
+ import (
++	"strings"
++
+ 	"github.com/drone/drone/cmd/drone-server/config"
+ 	"github.com/drone/go-login/login"
+ 	"github.com/drone/go-login/login/bitbucket"
+@@ -25,7 +27,6 @@ import (
+ 	"github.com/drone/go-login/login/gogs"
+ 	"github.com/drone/go-login/login/stash"
+ 	"github.com/drone/go-scm/scm/transport/oauth2"
+-	"strings"
+ 
+ 	"github.com/google/wire"
+ 	"github.com/sirupsen/logrus"
+@@ -70,7 +71,7 @@ func provideBitbucketLogin(config config.Config) login.Middleware {
+ 	return &bitbucket.Config{
+ 		ClientID:     config.Bitbucket.ClientID,
+ 		ClientSecret: config.Bitbucket.ClientSecret,
+-		RedirectURL:  config.Server.Addr + "/login",
++		RedirectURL:  config.Server.Addr + "/awecloud/devops/login",
+ 	}
+ }
+ 
+@@ -98,7 +99,7 @@ func provideGiteeLogin(config config.Config) login.Middleware {
+ 	}
+ 	redirectURL := config.Gitee.RedirectURL
+ 	if redirectURL == "" {
+-		redirectURL = config.Server.Addr + "/login"
++		redirectURL = config.Server.Addr + "/awecloud/devops/login"
+ 	}
+ 	return &gitee.Config{
+ 		ClientID:     config.Gitee.ClientID,
+@@ -122,7 +123,7 @@ func provideGiteaLogin(config config.Config) login.Middleware {
+ 		Server:       config.Gitea.Server,
+ 		Client:       defaultClient(config.Gitea.SkipVerify),
+ 		Logger:       logrus.StandardLogger(),
+-		RedirectURL:  config.Server.Addr + "/login",
++		RedirectURL:  config.Server.Addr + "/awecloud/devops/login",
+ 		Scope:        config.Gitea.Scope,
+ 	}
+ }
+@@ -136,7 +137,7 @@ func provideGitlabLogin(config config.Config) login.Middleware {
+ 	return &gitlab.Config{
+ 		ClientID:     config.GitLab.ClientID,
+ 		ClientSecret: config.GitLab.ClientSecret,
+-		RedirectURL:  config.Server.Addr + "/login",
++		RedirectURL:  config.Server.Addr + "/awecloud/devops/login",
+ 		Server:       config.GitLab.Server,
+ 		Client:       defaultClient(config.GitLab.SkipVerify),
+ 	}
+@@ -150,7 +151,7 @@ func provideGogsLogin(config config.Config) login.Middleware {
+ 	}
+ 	return &gogs.Config{
+ 		Label:  "drone",
+-		Login:  "/login/form",
++		Login:  "/awecloud/devops/login/form",
+ 		Server: config.Gogs.Server,
+ 		Client: defaultClient(config.Gogs.SkipVerify),
+ 	}
+@@ -172,7 +173,7 @@ func provideStashLogin(config config.Config) login.Middleware {
+ 		ConsumerKey:    config.Stash.ConsumerKey,
+ 		ConsumerSecret: config.Stash.ConsumerSecret,
+ 		PrivateKey:     privateKey,
+-		CallbackURL:    config.Server.Addr + "/login",
++		CallbackURL:    config.Server.Addr + "/awecloud/devops/login",
+ 		Client:         defaultClient(config.Stash.SkipVerify),
+ 	}
+ }
 diff --git a/cmd/drone-server/inject_server.go b/cmd/drone-server/inject_server.go
 index 07302bd5..072de9f2 100644
 --- a/cmd/drone-server/inject_server.go
@@ -32,6 +109,50 @@ index 07302bd5..072de9f2 100644
  	return r
  }
  
+diff --git a/handler/web/login.go b/handler/web/login.go
+index 6b2e660d..7d9910f2 100644
+--- a/handler/web/login.go
++++ b/handler/web/login.go
+@@ -70,10 +70,10 @@ func HandleLogin(
+ 		logger := logrus.WithField("login", account.Login)
+ 		logger.Debugf("attempting authentication")
+ 
+-		redirect := "/"
++		redirect := "/awecloud/devops/"
+ 		user, err := users.FindLogin(ctx, account.Login)
+ 		if err == sql.ErrNoRows {
+-			redirect = "/register"
++			redirect = "/awecloud/devops/register"
+ 
+ 			user = &core.User{
+ 				Login:     account.Login,
+@@ -173,7 +173,7 @@ func HandleLogin(
+ 		// If the user account has not completed registration,
+ 		// redirect to the registration form.
+ 		if len(user.Email) == 0 && user.Created > 1619841600 {
+-			redirect = "/register"
++			redirect = "/awecloud/devops/register"
+ 		}
+ 
+ 		logger.Debugf("authentication successful")
+@@ -199,7 +199,7 @@ func synchronize(ctx context.Context, syncer core.Syncer, user *core.User) {
+ }
+ 
+ func writeLoginError(w http.ResponseWriter, r *http.Request, err error) {
+-	http.Redirect(w, r, "/login/error?message="+err.Error(), http.StatusSeeOther)
++	http.Redirect(w, r, "/awecloud/devops/login/error?message="+err.Error(), http.StatusSeeOther)
+ }
+ 
+ func writeLoginErrorStr(w http.ResponseWriter, r *http.Request, s string) {
+@@ -221,7 +221,7 @@ func HandleLoginForm() http.HandlerFunc {
+ 
+ // html page displayed to collect credentials.
+ var loginForm = `
+-<form method="POST" action="/login">
++<form method="POST" action="/awecloud/devops/login">
+ <input type="text" name="username" />
+ <input type="password" name="password" />
+ <input type="submit" />
 -- 
 2.39.2
 
