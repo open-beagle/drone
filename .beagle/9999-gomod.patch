@@ -1,18 +1,18 @@
-From 5c21f918c0e8f3d08becb4fcd2e9f9d25e61ac62 Mon Sep 17 00:00:00 2001
+From 288f61d2f0e8a9ada323a471f9b8be603609461d Mon Sep 17 00:00:00 2001
 From: shucheng <shucheng@bd-apaas.com>
-Date: Thu, 13 Apr 2023 22:19:32 +0800
+Date: Thu, 13 Apr 2023 22:39:06 +0800
 Subject: [PATCH] gomod
 
 ---
- go.mod | 4 ++++
- go.sum | 8 ++++----
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ go.mod | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ go.sum | 13 ++++++-------
+ 2 files changed, 58 insertions(+), 15 deletions(-)
 
 diff --git a/go.mod b/go.mod
-index 03a19a98..e136224d 100644
+index 03a19a98..bc06aa4b 100644
 --- a/go.mod
 +++ b/go.mod
-@@ -2,6 +2,10 @@ module github.com/drone/drone
+@@ -2,13 +2,15 @@ module github.com/drone/drone
  
  replace github.com/docker/docker => github.com/docker/engine v17.12.0-ce-rc1.0.20200309214505-aa6a9891b09c+incompatible
  
@@ -23,11 +23,105 @@ index 03a19a98..e136224d 100644
  require (
  	github.com/99designs/httpsignatures-go v0.0.0-20170731043157-88528bf4ca7e
  	github.com/Azure/azure-storage-blob-go v0.7.0
+-	github.com/Azure/go-autorest/autorest/adal v0.8.3 // indirect
+ 	github.com/asaskevich/govalidator v0.0.0-20180315120708-ccb8e960c48f
+ 	github.com/aws/aws-sdk-go v1.37.3
+-	github.com/codegangsta/negroni v1.0.0 // indirect
+ 	github.com/coreos/go-semver v0.2.0
+ 	github.com/dchest/authcookie v0.0.0-20120917135355-fbdef6e99866
+ 	github.com/dchest/uniuri v0.0.0-20160212164326-8902c56451e9
+@@ -34,19 +36,16 @@ require (
+ 	github.com/google/wire v0.2.1
+ 	github.com/gosimple/slug v1.3.0
+ 	github.com/h2non/gock v1.0.15
+-	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
+ 	github.com/hashicorp/go-multierror v1.1.0
+ 	github.com/hashicorp/go-retryablehttp v0.5.4
+ 	github.com/hashicorp/golang-lru v0.5.1
+ 	github.com/jmoiron/sqlx v0.0.0-20180614180643-0dae4fefe7c0
+ 	github.com/joho/godotenv v1.3.0
+ 	github.com/kelseyhightower/envconfig v1.3.0
+-	github.com/kr/pretty v0.2.0 // indirect
+ 	github.com/lib/pq v1.1.0
+-	github.com/mattn/go-sqlite3 v1.9.0
++	github.com/mattn/go-sqlite3 v1.14.16
+ 	github.com/oxtoacart/bpool v0.0.0-20150712133111-4e1c5567d7c2
+ 	github.com/prometheus/client_golang v0.9.2
+-	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
+ 	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967
+ 	github.com/segmentio/ksuid v1.0.2
+ 	github.com/sirupsen/logrus v1.6.0
+@@ -54,10 +53,55 @@ require (
+ 	go.starlark.net v0.0.0-20201118183435-e55f603d8c79
+ 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+ 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
+-	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect
+ 	gopkg.in/yaml.v2 v2.3.0
+ )
+ 
++require (
++	github.com/Azure/azure-pipeline-go v0.2.1 // indirect
++	github.com/Azure/go-autorest/autorest/adal v0.8.3 // indirect
++	github.com/Microsoft/go-winio v0.4.11 // indirect
++	github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973 // indirect
++	github.com/bmatcuk/doublestar v1.1.1 // indirect
++	github.com/buildkite/yaml v2.1.0+incompatible // indirect
++	github.com/cespare/xxhash/v2 v2.1.1 // indirect
++	github.com/codegangsta/negroni v1.0.0 // indirect
++	github.com/containerd/containerd v1.3.4 // indirect
++	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
++	github.com/docker/distribution v2.7.1+incompatible // indirect
++	github.com/docker/docker v1.13.1 // indirect
++	github.com/docker/go-connections v0.3.0 // indirect
++	github.com/docker/go-units v0.3.3 // indirect
++	github.com/ghodss/yaml v1.0.0 // indirect
++	github.com/gogo/protobuf v0.0.0-20170307180453-100ba4e88506 // indirect
++	github.com/golang/protobuf v1.4.2 // indirect
++	github.com/h2non/parth v0.0.0-20190131123155-b4df798d6542 // indirect
++	github.com/hashicorp/errwrap v1.0.0 // indirect
++	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
++	github.com/jmespath/go-jmespath v0.4.0 // indirect
++	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
++	github.com/kr/pretty v0.2.0 // indirect
++	github.com/mattn/go-ieproxy v0.0.0-20190610004146-91bb50d98149 // indirect
++	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
++	github.com/natessilva/dag v0.0.0-20180124060714-7194b8dcc5c4 // indirect
++	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
++	github.com/opencontainers/image-spec v1.0.1 // indirect
++	github.com/pkg/errors v0.9.1 // indirect
++	github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4 // indirect
++	github.com/prometheus/common v0.0.0-20181126121408-4724e9255275 // indirect
++	github.com/prometheus/procfs v0.0.0-20181204211112-1dc9a6cbc91a // indirect
++	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
++	github.com/vinzenz/yaml v0.0.0-20170920082545-91409cdd725d // indirect
++	golang.org/x/net v0.0.0-20201202161906-c7110b5ffcbb // indirect
++	golang.org/x/sys v0.0.0-20210112080510-489259a85091 // indirect
++	golang.org/x/text v0.3.3 // indirect
++	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect
++	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
++	google.golang.org/appengine v1.6.6 // indirect
++	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55 // indirect
++	google.golang.org/grpc v1.30.0 // indirect
++	google.golang.org/protobuf v1.23.0 // indirect
++)
++
+ replace github.com/h2non/gock => gopkg.in/h2non/gock.v1 v1.0.14
+ 
+-go 1.13
++go 1.20
 diff --git a/go.sum b/go.sum
-index c7eae8f5..e461a1e3 100644
+index c7eae8f5..2ca8fa24 100644
 --- a/go.sum
 +++ b/go.sum
-@@ -78,10 +78,6 @@ github.com/drone/drone-go v1.7.2-0.20220308165842-f9e4fe31c2af/go.mod h1:fxCf9jA
+@@ -18,7 +18,6 @@ github.com/Azure/go-autorest/autorest/date v0.2.0 h1:yW+Zlqf26583pE43KhfnhFcdmSW
+ github.com/Azure/go-autorest/autorest/date v0.2.0/go.mod h1:vcORJHLJEh643/Ioh9+vPmf1Ij9AEBM5FuBIXLmIy0g=
+ github.com/Azure/go-autorest/autorest/mocks v0.1.0/go.mod h1:OTyCOPRA2IgIlWxVYxBee2F5Gr4kF2zd2J5cFRaIDN0=
+ github.com/Azure/go-autorest/autorest/mocks v0.2.0/go.mod h1:OTyCOPRA2IgIlWxVYxBee2F5Gr4kF2zd2J5cFRaIDN0=
+-github.com/Azure/go-autorest/autorest/mocks v0.3.0 h1:qJumjCaCudz+OcqE9/XtEPfvtOjOmKaui4EOpFI6zZc=
+ github.com/Azure/go-autorest/autorest/mocks v0.3.0/go.mod h1:a8FDP3DYzQ4RYfVAxAN3SVSiiO77gL2j2ronKKP0syM=
+ github.com/Azure/go-autorest/logger v0.1.0 h1:ruG4BSDXONFRrZZJ2GUXDiUyVpayPmb1GnWeHDdaNKY=
+ github.com/Azure/go-autorest/logger v0.1.0/go.mod h1:oExouG+K6PryycPJfVSxi/koC6LSNgds39diKLz7Vrc=
+@@ -78,10 +77,6 @@ github.com/drone/drone-go v1.7.2-0.20220308165842-f9e4fe31c2af/go.mod h1:fxCf9jA
  github.com/drone/drone-runtime v1.0.7-0.20190729202838-87c84080f4a1/go.mod h1:+osgwGADc/nyl40J0fdsf8Z09bgcBZXvXXnLOY48zYs=
  github.com/drone/drone-runtime v1.1.1-0.20200623162453-61e33e2cab5d h1:P5HI/Y9hARTZ3F3EKs0kYijhjXZWQRQHYn1neTi0pWM=
  github.com/drone/drone-runtime v1.1.1-0.20200623162453-61e33e2cab5d/go.mod h1:4/2QToW5+HGD0y1sTw7X35W1f7YINS14UfDY4isggT8=
@@ -38,7 +132,18 @@ index c7eae8f5..e461a1e3 100644
  github.com/drone/envsubst v1.0.3-0.20200709231038-aa43e1c1a629 h1:rIaZZalMGGPb2cU/+ypuggZ8aMlpa17RUlJUtsMv8pw=
  github.com/drone/envsubst v1.0.3-0.20200709231038-aa43e1c1a629/go.mod h1:N2jZmlMufstn1KEqvbHjw40h1KyTmnVzHcSc9bFiJ2g=
  github.com/drone/funcmap v0.0.0-20210823160631-9e9dec149056 h1:SCJwMR0FMA0aKwAntCBh02YmtHEnU40zaDzeeCvIRug=
-@@ -228,6 +224,10 @@ github.com/onsi/gomega v1.10.1/go.mod h1:iN09h71vgCQne3DLsj+A5owkum+a2tYe+TOCB1y
+@@ -202,8 +197,8 @@ github.com/mattn/go-ieproxy v0.0.0-20190610004146-91bb50d98149/go.mod h1:31jz6HN
+ github.com/mattn/go-isatty v0.0.4/go.mod h1:M+lRXTBqGeGNdLjl/ufCoiOlB5xdOkqRJdNxMWT7Zi4=
+ github.com/mattn/go-isatty v0.0.8/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
+ github.com/mattn/go-isatty v0.0.11/go.mod h1:PhnuNfih5lzO57/f3n+odYbM4JtupLOxQOAqxQCu2WE=
+-github.com/mattn/go-sqlite3 v1.9.0 h1:pDRiWfl+++eC2FEFRy6jXmQlvp4Yh3z1MJKg4UeYM/4=
+-github.com/mattn/go-sqlite3 v1.9.0/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
++github.com/mattn/go-sqlite3 v1.14.16 h1:yOQRA0RpS5PFz/oikGwBEqvAWhWg5ufRz4ETLjwpU1Y=
++github.com/mattn/go-sqlite3 v1.14.16/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
+ github.com/matttproud/golang_protobuf_extensions v1.0.1 h1:4hp9jkHxhMHkqkrB3Ix0jegS5sx/RkqARlsWZ6pIwiU=
+ github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
+ github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
+@@ -228,6 +223,10 @@ github.com/onsi/gomega v1.10.1/go.mod h1:iN09h71vgCQne3DLsj+A5owkum+a2tYe+TOCB1y
  github.com/onsi/gomega v1.10.2/go.mod h1:iN09h71vgCQne3DLsj+A5owkum+a2tYe+TOCB1ybHNo=
  github.com/onsi/gomega v1.10.5 h1:7n6FEkpFmfCoo2t+YYqXH0evK+a9ICQz0xcAy9dYcaQ=
  github.com/onsi/gomega v1.10.5/go.mod h1:gza4q3jKQJijlu05nKWRCW/GavJumGt8aNRxWg7mt48=
