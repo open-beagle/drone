@@ -58,7 +58,7 @@ steps:
       base: registry.cn-qingdao.aliyuncs.com/wod/alpine:3-amd64
       dockerfile: .beagle/dockerfile
       repo: wod/drone
-      version: v2.16.4
+      version: v2.16.5
       channel: amd64
       args: 'TARGETOS=linux,TARGETARCH=amd64'
       registry: registry.cn-qingdao.aliyuncs.com
@@ -76,7 +76,7 @@ steps:
       base: registry.cn-qingdao.aliyuncs.com/wod/alpine:3-arm64
       dockerfile: .beagle/dockerfile
       repo: wod/drone
-      version: v2.16.4
+      version: v2.16.5
       channel: arm64
       args: 'TARGETOS=linux,TARGETARCH=arm64'
       registry: registry.cn-qingdao.aliyuncs.com
@@ -94,7 +94,7 @@ steps:
       base: registry.cn-qingdao.aliyuncs.com/wod/alpine:3-ppc64le
       dockerfile: .beagle/dockerfile
       repo: wod/drone
-      version: v2.16.4
+      version: v2.16.5
       channel: ppc64le
       args: 'TARGETOS=linux,TARGETARCH=ppc64le'
       registry: registry.cn-qingdao.aliyuncs.com
@@ -112,7 +112,7 @@ steps:
       base: registry.cn-qingdao.aliyuncs.com/wod/alpine:3-mips64le
       dockerfile: .beagle/dockerfile
       repo: wod/drone
-      version: v2.16.4
+      version: v2.16.5
       channel: mips64le
       args: 'TARGETOS=linux,TARGETARCH=mips64le'
       registry: registry.cn-qingdao.aliyuncs.com
@@ -125,8 +125,8 @@ steps:
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-manifest:1.0
     settings:
       platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/mips64le
-      template: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.4-ARCH
-      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.4
+      template: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.5-ARCH
+      target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.5
       username:
         from_secret: REGISTRY_USER_ALIYUN
       password:
@@ -152,7 +152,7 @@ steps:
   - name: harbor-amd64
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-tag:1.0
     settings:
-      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.4-amd64
+      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.5-amd64
       target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16-amd64
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
@@ -163,7 +163,7 @@ steps:
   - name: harbor-arm64
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-tag:1.0
     settings:
-      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.4-arm64
+      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.5-arm64
       target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16-arm64
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
@@ -174,7 +174,7 @@ steps:
   - name: harbor-ppc64le
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-tag:1.0
     settings:
-      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.4-ppc64le
+      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.5-ppc64le
       target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16-ppc64le
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
@@ -185,7 +185,7 @@ steps:
   - name: harbor-mips64le
     image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-tag:1.0
     settings:
-      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.4-mips64le
+      source: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16.5-mips64le
       target: registry.cn-qingdao.aliyuncs.com/wod/drone:v2.16-mips64le
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
