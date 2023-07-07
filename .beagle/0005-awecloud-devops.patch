@@ -1,6 +1,6 @@
-From f01af72242adb19ec5f5521107a410555b221479 Mon Sep 17 00:00:00 2001
+From 20c5f2f85046119fe053b09fd22c667e1ea250ab Mon Sep 17 00:00:00 2001
 From: shucheng <shucheng@bd-apaas.com>
-Date: Thu, 13 Apr 2023 23:23:51 +0800
+Date: Fri, 7 Jul 2023 23:38:20 +0800
 Subject: [PATCH] awecloud-devops
 
 ---
@@ -8,7 +8,8 @@ Subject: [PATCH] awecloud-devops
  cmd/drone-server/inject_server.go | 14 +++++++-------
  handler/web/login.go              | 10 +++++-----
  handler/web/pages.go              |  6 +++---
- 4 files changed, 23 insertions(+), 22 deletions(-)
+ service/hook/hook.go              |  2 +-
+ 5 files changed, 24 insertions(+), 23 deletions(-)
 
 diff --git a/cmd/drone-server/inject_login.go b/cmd/drone-server/inject_login.go
 index 00dc1c26..14601e57 100644
@@ -174,6 +175,19 @@ index 4bf347e4..045ccd38 100644
  		ctx := r.Context()
  
  		if ok, _ := license.Exceeded(ctx); ok {
+diff --git a/service/hook/hook.go b/service/hook/hook.go
+index eb464191..36ae681d 100644
+--- a/service/hook/hook.go
++++ b/service/hook/hook.go
+@@ -45,7 +45,7 @@ func (s *service) Create(ctx context.Context, user *core.User, repo *core.Reposi
+ 	})
+ 	hook := &scm.HookInput{
+ 		Name:   "drone",
+-		Target: s.addr + "/hook",
++		Target: s.addr + "/awecloud/devops/hook",
+ 		Secret: repo.Signer,
+ 		Events: scm.HookEvents{
+ 			Branch:      true,
 -- 
 2.39.2
 

@@ -60,7 +60,7 @@ steps:
       repo: wod/drone
       version: v2.16.5
       channel: amd64
-      args: 'TARGETOS=linux,TARGETARCH=amd64'
+      args: "TARGETOS=linux,TARGETARCH=amd64"
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
         from_secret: REGISTRY_USER_ALIYUN
@@ -78,7 +78,7 @@ steps:
       repo: wod/drone
       version: v2.16.5
       channel: arm64
-      args: 'TARGETOS=linux,TARGETARCH=arm64'
+      args: "TARGETOS=linux,TARGETARCH=arm64"
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
         from_secret: REGISTRY_USER_ALIYUN
@@ -96,7 +96,7 @@ steps:
       repo: wod/drone
       version: v2.16.5
       channel: ppc64le
-      args: 'TARGETOS=linux,TARGETARCH=ppc64le'
+      args: "TARGETOS=linux,TARGETARCH=ppc64le"
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
         from_secret: REGISTRY_USER_ALIYUN
@@ -114,7 +114,7 @@ steps:
       repo: wod/drone
       version: v2.16.5
       channel: mips64le
-      args: 'TARGETOS=linux,TARGETARCH=mips64le'
+      args: "TARGETOS=linux,TARGETARCH=mips64le"
       registry: registry.cn-qingdao.aliyuncs.com
       registry_user:
         from_secret: REGISTRY_USER_ALIYUN
