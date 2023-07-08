@@ -1,6 +1,6 @@
-From 8c1e38adef6be5ff1635ee1e8154719f4ba332c0 Mon Sep 17 00:00:00 2001
+From 6fb090bf97f581937a692d0249d9755e70ccdc02 Mon Sep 17 00:00:00 2001
 From: shucheng <shucheng@bd-apaas.com>
-Date: Sat, 8 Jul 2023 00:09:38 +0800
+Date: Sat, 8 Jul 2023 23:02:24 +0800
 Subject: [PATCH] go mod
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH] go mod
  2 files changed, 58 insertions(+), 15 deletions(-)
 
 diff --git a/go.mod b/go.mod
-index 03a19a98..51119929 100644
+index 03a19a98..72f978d3 100644
 --- a/go.mod
 +++ b/go.mod
 @@ -2,13 +2,15 @@ module github.com/drone/drone
@@ -18,7 +18,7 @@ index 03a19a98..51119929 100644
  
 +replace github.com/drone/drone-yaml => github.com/open-beagle/drone-yaml v1.2.4-beagle.0
 +
-+replace github.com/drone/drone-ui => github.com/open-beagle/drone-ui v2.9.1-beagle.12+incompatible
++replace github.com/drone/drone-ui => github.com/open-beagle/drone-ui v2.9.1-beagle.13+incompatible
 +
  require (
  	github.com/99designs/httpsignatures-go v0.0.0-20170731043157-88528bf4ca7e
@@ -110,7 +110,7 @@ index 03a19a98..51119929 100644
 -go 1.13
 +go 1.20
 diff --git a/go.sum b/go.sum
-index c7eae8f5..2435d44b 100644
+index c7eae8f5..d4f0dede 100644
 --- a/go.sum
 +++ b/go.sum
 @@ -18,7 +18,6 @@ github.com/Azure/go-autorest/autorest/date v0.2.0 h1:yW+Zlqf26583pE43KhfnhFcdmSW
@@ -147,8 +147,8 @@ index c7eae8f5..2435d44b 100644
  github.com/onsi/gomega v1.10.2/go.mod h1:iN09h71vgCQne3DLsj+A5owkum+a2tYe+TOCB1ybHNo=
  github.com/onsi/gomega v1.10.5 h1:7n6FEkpFmfCoo2t+YYqXH0evK+a9ICQz0xcAy9dYcaQ=
  github.com/onsi/gomega v1.10.5/go.mod h1:gza4q3jKQJijlu05nKWRCW/GavJumGt8aNRxWg7mt48=
-+github.com/open-beagle/drone-ui v2.9.1-beagle.12+incompatible h1:jMbAGVih1P5WK2lpkRUWpttP26WM4108jbKozX0oRP0=
-+github.com/open-beagle/drone-ui v2.9.1-beagle.12+incompatible/go.mod h1:ZeWMgBiUio+1JzRZo0wEZsBBZ7CiyD8H5Ky/fKN5by4=
++github.com/open-beagle/drone-ui v2.9.1-beagle.13+incompatible h1:xhXG/HiXmG81djUl3Vkva0ToGhG1fQVLRWxQ4N6G1xU=
++github.com/open-beagle/drone-ui v2.9.1-beagle.13+incompatible/go.mod h1:ZeWMgBiUio+1JzRZo0wEZsBBZ7CiyD8H5Ky/fKN5by4=
 +github.com/open-beagle/drone-yaml v1.2.4-beagle.0 h1:/kZ6YMBwQL96lPCI7s/P72i8DhMTPEDMXIg45xD6Asw=
 +github.com/open-beagle/drone-yaml v1.2.4-beagle.0/go.mod h1:QsqliFK8nG04AHFN9tTn9XJomRBQHD4wcejWW1uz/10=
  github.com/opencontainers/go-digest v1.0.0-rc1 h1:WzifXhOVOEOuFYOJAW6aQqW0TooG2iki3E3Ii+WN7gQ=
