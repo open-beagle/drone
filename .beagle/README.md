@@ -17,8 +17,8 @@ git merge v2.16.0
 docker run -it --rm \
 -v $PWD/:/go/src/github.com/drone/drone \
 -w /go/src/github.com/drone/drone \
-registry.cn-qingdao.aliyuncs.com/wod/golang:1.20-alpine \
-bash -c '
+registry.cn-qingdao.aliyuncs.com/wod/git:2 \
+sh -c '
 git apply .beagle/0001-config.patch && \
 git apply .beagle/0002-machine.patch && \
 git apply .beagle/0003-user-alias.patch && \
